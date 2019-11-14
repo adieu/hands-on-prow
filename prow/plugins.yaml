@@ -1,0 +1,59 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+config_updater:
+  maps:
+    prow/config.yaml:
+      name: config
+    prow/plugins.yaml:
+      name: plugins
+    prow/prowjobs/**/*.yaml:
+      name: job-config
+
+approve:
+- repos:
+  - adieu
+  require_self_approval: false
+
+lgtm:
+- repos:
+  - adieu
+  review_acts_as_lgtm: true
+
+plugins:
+  adieu:
+  - approve
+  - assign
+  - cat
+  - dog
+  - golint
+  - hold
+  - label
+  - lgtm
+  - owners-label
+  - pony
+  - shrug
+  - size
+  - trigger
+  - verify-owners
+  - yuks
+
+  adieu/hands-on-prow:
+  - blunderbuss
+  - config-updater
+  - heart
+  - lifecycle
+  - override
+  - wip
+

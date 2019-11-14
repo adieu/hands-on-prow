@@ -1,0 +1,93 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+tide:
+  merge_method:
+    adieu/hands-on-prow: squash
+  target_url: https://prow.porter.io/tide
+  queries:
+    - repos:
+        - adieu/hands-on-prow
+      labels:
+        - lgtm
+        - approved
+      missingLabels:
+        - do-not-merge
+        - do-not-merge/hold
+        - do-not-merge/work-in-progress
+
+plank:
+  job_url_prefix_config:
+    '*': https://prow.porter.io/view/gcs/
+  pod_pending_timeout: 60m
+  default_decoration_configs:
+    '*':
+      timeout: 7200000000000 # 2h
+      grace_period: 15000000000 # 15s
+      utility_images:
+        clonerefs: "gcr.io/k8s-prow/clonerefs:v20191108-08fbf64ac"
+        initupload: "gcr.io/k8s-prow/initupload:v20191108-08fbf64ac"
+        entrypoint: "gcr.io/k8s-prow/entrypoint:v20191108-08fbf64ac"
+        sidecar: "gcr.io/k8s-prow/sidecar:v20191108-08fbf64ac"
+      gcs_configuration:
+        bucket: "porter-prow"
+        path_strategy: "explicit"
+      gcs_credentials_secret: "service-account"
+
+sinker:
+  resync_period: 1m
+  max_prowjob_age: 48h
+  max_pod_age: 24h
+
+prowjob_namespace: prow
+pod_namespace: test-pods
+log_level: debug
+
+deck:
+  spyglass:
+    size_limit: 500000000 # 500MB
+    gcs_browser_prefix: https://pantheon.corp.google.com/storage/browser/
+    # TODO(krzyzacy): no testgrid support yet, consider use k8s.testgrid, or deploy a new testgrid instance
+    # testgrid_config: gs://testgrid/config
+    # testgrid_root: https://testgrid.corp.google.com/
+    lenses:
+      - lens:
+          name: metadata
+        required_files:
+          - started.json|finished.json
+      - lens:
+          name: buildlog
+        required_files:
+          - build-log.txt
+      - lens:
+          name: junit
+        required_files:
+          - artifacts/junit.*\.xml
+
+presets:
+- labels:
+    preset-service-account: "true"
+  env:
+  - name: GOOGLE_APPLICATION_CREDENTIALS
+    value: /etc/service-account/service-account.json
+  - name: E2E_GOOGLE_APPLICATION_CREDENTIALS
+    value: /etc/service-account/service-account.json
+  volumes:
+  - name: service
+    secret:
+      secretName: service-account
+  volumeMounts:
+  - name: service
+    mountPath: /etc/service-account
+    readOnly: true
