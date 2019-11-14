@@ -1,31 +1,11 @@
 Hands on: Prow
 Kubernetes Native CI/CD
-14 Jun 2019
 Tags: CI/CD, K8s, Prow
-
-Juan Manuel Parrilla
-Senior Software Engineer, Red Hat
-jparrill@redhat.com
-https://github.com/jparrill/hands-on-prow
-@kerbeross
 
 
 * Hands on: Prow
 
 .image img/first.png _ 950
-.background img/background.png
-
-* About me
-
-.background img/background.png
-
-- Programming enthusiast
-- Redhatter
-- Openshift/Kubernetes Lover
-
-.image img/jparrill_avatar.jpg _ 300
-
-.caption [[https://github.com/jparrill/hands-on-prow][Hands on Prow]] by Juan Manuel Parrilla
 
 * Agenda
 
@@ -38,9 +18,6 @@ https://github.com/jparrill/hands-on-prow
 - Notification management
 - References
 
-.background img/background.png
-.caption [[https://github.com/jparrill/hands-on-prow][Hands on Prow]] by Juan Manuel Parrilla
-
 * What is Prow
 
 .image img/prow_icon.jpg
@@ -52,7 +29,6 @@ https://github.com/jparrill/hands-on-prow
 - Similar behaviour than _Operators_
 - This is the [[https://raw.githubusercontent.com/kubernetes/test-infra/master/prow/docs/pr-interactions-sequence.svg?sanitize=true][workflow diagram]]
 
-.background img/background.png
 
 
 * What is Prow
@@ -62,7 +38,6 @@ https://github.com/jparrill/hands-on-prow
 - An this is how looks like:
 .code samples/control_plane
 
-.background img/background.png
 
 
 * What is Prow
@@ -74,12 +49,10 @@ https://github.com/jparrill/hands-on-prow
 	Github /retest comment > Hook > Tide > Trigger jobs 
 - *Tide* will take care about testing and merging (once configured) 
 
-.background img/background.png
 
 * Prow Control Plane
 
 .image img/core_components.png _ 500
-.background img/background.png
 
 
 * Prow Control Plane: Hook 
@@ -90,7 +63,6 @@ https://github.com/jparrill/hands-on-prow
 - It is a stateless server that listens for GitHub webhooks and dispatches them to the appropriate plugins. 
 - Hook's plugins are used to trigger jobs, implement 'slash' commands, post to Slack, and more...
 
-.background img/background.png
 
 
 * Prow Control Plane: Plank  
@@ -101,39 +73,33 @@ https://github.com/jparrill/hands-on-prow
 - Take care about spin up a pod that uploads the artifacts to GCS
 .image img/plank.png _ 400
 
-.background img/background.png
 
 
 * Prow Control Plane: Plank  
 - This is how looks like the Plank's config section:
 .code -edit samples/sample_config.yaml /^plank:/,/gcs_credentials_secret/ 
 
-.background img/background.png
 
 
 * Prow Control Plane: Deck 
 
 - [[https://github.com/kubernetes/test-infra/tree/master/prow/cmd/deck][*Deck*]] is the Prow's WebUI and presents a nice view of recent jobs, among other things
 .image img/deck_recent.png _ 750
-.background img/background.png
 
 
 * Prow Control Plane: Deck 
 - The PR current status
 .image img/deck_tide.png _ 900
-.background img/background.png
 
 
 * Prow Control Plane: Deck 
 - ...and history of merge automation
 .image img/deck_tide_history.png _ 900
-.background img/background.png
 
 
 * Prow Control Plane: Deck 
 .image img/deck_tide_pr_status_by_auth.png 480 730
 - Also a dashboard for PR authors.
-.background img/background.png
 
 
 * Prow Control Plane: Deck 
@@ -141,7 +107,6 @@ https://github.com/jparrill/hands-on-prow
 - This is how looks like the Deck's config section:
 .code -edit samples/sample_config.yaml /^deck:/,/junit/ 
 
-.background img/background.png
 
 
 * Prow Control Plane: Horologium and Synker
@@ -153,7 +118,6 @@ Both are very simple but useful components
 - Horologium does not have config at all but here is a Sinker piece of config:
 .code samples/sample_config.yaml /^sinker:/,/max_pod_age:/
 
-.background img/background.png
 
 
 * Prow Control Plane: Tide
@@ -164,12 +128,10 @@ Both are very simple but useful components
 - Serves live data to populate Tide Dashboard, PR Dashboard and also Tide History page
 - Provides these merge modes: `merge`, `squash` and `rebase`
 
-.background img/background.png
 
 
 * Prow Control Plane: Tide
 .code samples/sample_config.yaml /^tide:/,/skip-unknown/
-.background img/background.png
 
 
 * Prow Control Plane: Crier
@@ -184,22 +146,18 @@ Those are the supported providers:
 - Github
 - Slack
 
-.background img/background.png
 
 
 * Prow Control Plane: Crier
 - This is how looks like the Crier's config:
 .code samples/sample_config.yaml /^slack_reporter:/,/report_template:/
-.background img/background.png
 
 
 * Questions? 
-.background img/background.png
 
 
 * Deploying Prow 
 .image img/deploying_prow.jpg _ 800
-.background img/background.png
 
 
 * Deploying Prow 
@@ -211,7 +169,6 @@ We will just start assuming that you already have a standalone k8s working, the 
 
 - [[https://kubernetes.io/docs/setup/production-environment/turnkey/gce/][Deploy K8s on GCE]]
 .image img/k8s_logo.png
-.background img/background.png
 
 
 * Deploying Prow 
@@ -227,7 +184,6 @@ We will summarize all the nesessary steps to make it work (all explained in dept
 - Clone [[https://github.com/kubernetes/test-infra.git][test-infra]] repository, create `test-pods` NS and apply the `prow/cluster/starter.yaml` manifest
 - Now you to have Prow working
 
-.background img/background.png
 
 
 * Deploying Prow 
@@ -239,7 +195,6 @@ Depending on How did you configure your K8s instances you will access to your Pr
 - Otherwise you could access via Ingress through the LoadBalancer that GKE provides you.
 - Our main point to work with the UI will be the `deck` service
 
-.background img/background.png
 
 
 * Configuring Prow 
@@ -252,7 +207,6 @@ You will need to spend some time preparing your config files, here you have our 
 - Prepare the [[https://github.com/the-shadowmen/nostromo/blob/master/config.yaml][Config file]] for Prow
 - Prepare the [[https://github.com/the-shadowmen/nostromo/blob/master/plugins.yaml][Plugins file]] for Prow
 - Prepare the [[https://github.com/the-shadowmen/nostromo/blob/master/labels.yaml][Labels file]] for Prow
-.background img/background.png
 
 
 * Configuring Prow
@@ -264,13 +218,11 @@ Let's go into the different sections of the ConfigFile. We will not review all t
 - Sinker:
 .code samples/sample_config.yaml /^sinker/,/max_pod_age/
 
-.background img/background.png
 
 
 * Configuring Prow
 - Plank:
 .code samples/sample_config.yaml /^plank:/,/gcs_credentials_secret/
-.background img/background.png
 
 
 * Configuring Prow
@@ -282,12 +234,10 @@ Let's go into the different sections of the ConfigFile. We will not review all t
 - `default_decoration_config:` section to extend the pod definition
 - `utility_images:` Images that will take care about different tasks
 - `gcs_configuration.path_strategy:` Explicit means that you set the concrete path with `job_url_template`
-.background img/background.png
 
 
 * Configuring Prow 
 .code samples/sample_config.yaml /^tide:/,/skip-unknown-contexts/
-.background img/background.png
 
 
 * Configuring Prow 
@@ -297,7 +247,6 @@ In *Tide* section you set the correct context to manages the automerge:
 - Tide will look for `missingLabels` field in order to check that those tags are not there, otherwise Tide will block the auto-merge. 
 - `pr_status_base_url` Is a PR page that shows you the status of your pendings ones. You need to configure [[https://github.com/kubernetes/test-infra/blob/master/prow/docs/pr_status_setup.md][this other thing]] in order to make it work (also have an SSL configured Prow instance) 
 
-.background img/background.png
 
 
 * Configuring Prow 
@@ -305,7 +254,6 @@ Inside of *Deck* section and concretelly on spyglass one, we just are telling it
 .code samples/sample_config.yaml /^deck:/,/junit./
 
 Also on the config file we used to have the *Notifiers* and the *Jobs*, we will talk about those in their own section.
-.background img/background.png
 
 
 * Configuring Prow 
@@ -326,7 +274,6 @@ Now we need to verify that the ConfigFile and PluginFile is well formed with a *
 
   kubectl create configmap label-config --from-file=$HOME/prow_conf/labels.yaml -o yaml
 
-.background img/background.png
 
 
 * Configuring Prow 
@@ -338,22 +285,18 @@ there are plenty of them, but some of them needs to add additional ConfigMaps/Se
 
 Let's take a look to plugins...
 .image img/plugins_logo.png _ 200
-.background img/background.png
 
 
 * Questions? 
-.background img/background.png
 
 
 * Prow Plugins
 .image img/prow_plugins.png _ 800
-.background img/background.png
 
 
 * Prow Plugins
 Well, Prow plugins a a bunch of resources that give you capabilities on Prow platform. As an example, *assign* plugin gives the functionality to assign a reviewer to a PR that is already on going.
 .image img/assign_plugin.png _ 400
-.background img/background.png
 
 
 * Prow Plugins
@@ -361,7 +304,6 @@ This is how looks like part of [[https://github.com/the-shadowmen/nostromo/blob/
 .code samples/sample_plugins.yaml /^plugins/,/trigger/
 
 As you see those plugins are enabled for all the organization and you doesn't need to add them for every repo you have. Instead some other plugins need to be enabled by repository to make them work
-.background img/background.png
 
 
 * Prow Plugins
@@ -369,7 +311,6 @@ Inside of `plugins:` section we should add every repo and plugins that want to b
 .code samples/sample_plugins.yaml /the-shadowmen\/kubevirt.github.io/,/owners-label/
 - And depending on the plugin, customize the config with their own configuration appart form `plugins:` section
 .code samples/sample_plugins.yaml /^lgtm/,/review_act/
-.background img/background.png
 
 
 * Prow Plugins
@@ -380,16 +321,13 @@ As we said before:
 - [[https://github.com/kubernetes/test-infra/blob/master/prow/cmd/tide/README.md][*Tide*]] manages retesting and merging PRs once they meet the configured merge criteria.
 
 Also interacts with *Plank* in order to trigger Jobs
-.background img/background.png
 
 
 * Questions? 
-.background img/background.png
 
 
 * Auto-management of your GitHub repo
 .image img/bot_bender.png _ 350
-.background img/background.png
 
 
 * Auto-management of your GitHub repo
@@ -402,7 +340,6 @@ In order to manage out repo automatically, we need to go through our [[https://g
 You also need to have the Github Webhook pointing properly to your Hook service on K8s on your Github Org
 
 .image img/webhook_github.png
-.background img/background.png
 
 
 * Auto-management of your GitHub repo
@@ -417,7 +354,6 @@ There is not a great way to bake the config, because the documentation is not go
 
 .image img/safety_first.png _ 250
 
-.background img/background.png
 
 
 * Auto-management of your GitHub repo
@@ -434,16 +370,13 @@ There is not a great way to bake the config, because the documentation is not go
 
 This will allow you to start with Prow Jobs easily.
 .image img/ci_cd.png _ 450
-.background img/background.png
 
 
 * Questions? 
-.background img/background.png
 
 
 * Testing with Prow 
 .image img/test_section.jpg _ 750
-.background img/background.png
 
 
 * Testing with Prow 
@@ -451,7 +384,6 @@ If you'd been set the config as we followed, I've good news for you!
 .image img/long_way.jpg
 
 You should be able to execute testing right now! *\o/*
-.background img/background.png
 
 
 * Testing with Prow 
@@ -467,14 +399,12 @@ Let's see what kind of Jobs we have and how to configure them.
 - Will be executed in a pace that you decide.
 - You cannot set a Repository to work with (as we do with others)
 
-.background img/background.png
 
 
 * Testing with Prow 
 This is how looks like the *Periodic* Job spec:
 .code -edit samples/sample_config.yaml /^periodics/,/args:/
 The *Special* Decoration config are set on ConfigFile's Plank section 
-.background img/background.png
 
 
 * Testing with Prow 
@@ -488,13 +418,11 @@ The *Special* Decoration config are set on ConfigFile's Plank section
 - From that *Plugins* comes in action and do their thing, after that sometimes the workflow ends here.
 - Other times *Tide* will continue it managing the situation in case of `/test` or PR merge
 
-.background img/background.png
 
 
 * Testing with Prow
 This is how looks like the *Presubmit* Job spec:
 .code -edit samples/sample_config.yaml /^presubmits/,/args:/
-.background img/background.png
 
 
 * Testing with Prow 
@@ -508,20 +436,17 @@ This is how looks like the *Presubmit* Job spec:
 - From that *Plugins* comes in action and do their thing, after that will notify *Tide*.
 - Other times *Tide* will finish it executing the proper tests.
 
-.background img/background.png
 
 
 * Testing with Prow
 This is how looks like the *Postsubmit* Job spec:
 .code -edit samples/sample_config.yaml /^postsubmits/,/args:/
-.background img/background.png
 
 
 * Testing with Prow (Bonus)
 As you see, the config and the Jobs are mixed in the same ConfigMap/File, this is weird isn't it?
 Well this is what you need:
 .image img/config_updater.png _ 400
-.background img/background.png
 
 
 * Testing with Prow (Bonus)
@@ -533,7 +458,6 @@ Config updater redeploys configuration and plugin configuration files when they 
     - name: job-config
       mountPath: /etc/job-config
       readOnly: true
-.background img/background.png
 
 
 * Testing with Prow (Bonus)
@@ -552,23 +476,19 @@ Config updater redeploys configuration and plugin configuration files when they 
       github/ci/prow/files/labels.yaml:
         name: label-config
         namespace: kubevirt-prow
-.background img/background.png
 
 
 * Testing with Prow (Bonus)
 .image img/jobs_tree.png _ 600
 Also you need to attach the config to the concrete repo:
 .code samples/sample_plugins.yaml /the-shadowmen\/nostromo:/,/config-updater/
-.background img/background.png
 
 
 * Questions? 
-.background img/background.png
 
 
 * Prow Notifications
 .image img/notif_logo.png _ 350
-.background img/background.png
 
 
 * Prow Notifications
@@ -586,7 +506,6 @@ Those are the supported providers:
 - Pubsub
 - Github
 - Slack
-.background img/background.png
 
 
 * Prow Notifications
@@ -600,21 +519,17 @@ To Configure Crier you could [[https://github.com/kubernetes/test-infra/tree/mas
     --from-file=slack-api-token=$HOME/private/SLACK-API-TOKEN
 - Mount the Slack API Token Secret on the Jobs directly, at `/etc/slack-api-token` path
 
-.background img/background.png
 
 * Prow Notifications
 - Modify the Prow's ConfigMap adding a `slack_reporter` section including the desired configuration:
 .code samples/sample_config.yaml /^slack_reporter/,/report_template/
-.background img/background.png
 
 
 * Questions? 
-.background img/background.png
 
 
 * References
 .image img/references_logo.png _ 700
-.background img/background.png
 
 
 * References
@@ -629,7 +544,6 @@ To Configure Crier you could [[https://github.com/kubernetes/test-infra/tree/mas
 - [[https://github.com/kubernetes/test-infra/blob/master/prow/cmd/README.md#core-components][Prow Images]] 
 - [[https://raw.githubusercontent.com/kubernetes/test-infra/master/prow/docs/pr-interactions-sequence.svg?sanitize=true][Prow PR Workflow]]
 - [[https://github.com/kubernetes/test-infra/blob/master/prow/cmd/tide/maintainers.md#best-practices][Prow Best Practices]] 
-.background img/background.png
 
 
 * References
@@ -647,7 +561,6 @@ To Configure Crier you could [[https://github.com/kubernetes/test-infra/tree/mas
 - [[https://github.com/kubernetes/test-infra/blob/master/prow/jobs.md][Deep dive Jobs]]
 - [[https://github.com/kubernetes/test-infra/tree/master/prow/cmd/phaino][Phaino]]
 - [[https://github.com/kubernetes/test-infra/blob/master/prow/cmd/tide/config.md][Tide Config]]
-.background img/background.png
 
 
 
@@ -663,9 +576,7 @@ To Configure Crier you could [[https://github.com/kubernetes/test-infra/tree/mas
 
 - [[https://kurtmadel.com/posts/native-kubernetes-continuous-delivery/native-k8s-cd/][Another useful Article]] 
 - [[https://github.com/kubevirt/project-infra][Kubevirt Project-Infra]] A great example of how to manage Prow config and some config files to use it as reference
-.background img/background.png
 
 
 * The end
 .image img/the_end.jpg _ 650
-.background img/background.png
