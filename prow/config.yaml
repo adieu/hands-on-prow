@@ -75,6 +75,42 @@ deck:
         required_files:
           - artifacts/junit.*\.xml
 
+presubmits:
+  adieu/hands-on-prow:
+    - name: pull-prow-config-validate
+      branches:
+        - master
+      decorate: true
+      always_run: true
+      spec:
+        containers:
+          - image: gcr.io/k8s-prow/checkconfig:v20191108-08fbf64ac
+            imagePullPolicy: Always
+            command:
+              - /checkconfig
+            args:
+              - --config-path=./prow/config.yaml
+              - --job-config-path=./prow/prowjobs
+              - --plugin-config=prow/plugins.yaml
+              - --strict
+              # This warning can forbid valid (and convenient) config. Exclude it.
+              # Details: https://github.com/GoogleCloudPlatform/oss-test-infra/pull/131#discussion_r334208082
+              - --exclude-warning=mismatched-tide
+
+    - name: pull-test-infra-go-test
+      branches:
+        - master
+      decorate: true
+      always_run: true
+      spec:
+        containers:
+          - image: golang:1.13
+            command:
+              - go
+              - test
+              - ./...
+
+
 presets:
 - labels:
     preset-service-account: "true"
